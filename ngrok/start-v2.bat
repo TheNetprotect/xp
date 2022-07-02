@@ -19,4 +19,3 @@ echo Username: Netprotect
 echo Password: @/gu2?6=DHp=}31r3r
 echo You can login now
 ping -n 10 127.0.0.1 >nul
-
