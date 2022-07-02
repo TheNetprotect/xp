@@ -1,46 +1,45 @@
-#v1.1.4
+#Surfynet v.1.1.5
 
 name: XP-Beta
+
 on: workflow_dispatch
 
 jobs:
   build:
 
     runs-on: windows-latest
-    timeout-minutes: 9999
+    timeout-minutes: 999999999999
 
     steps:
-
-    - name: Download ngrok
+    - name: Download Ngrok.
       run: |
-        Invoke-WebRequest https://raw.githubusercontent.com/adtitas/ngrok-rdp/main/resources/ngrok.zip -OutFile ngrok.zip
+        Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
         Invoke-WebRequest https://raw.githubusercontent.com/TheNetprotect/xp/main/ngrok/start-v2.bat -OutFile start.bat
-        Invoke-WebRequest https://raw.githubusercontent.com/adtitas/ngrok-rdp/main/resources/winrar.exe -OutFile winrar.exe
-    - name: Extract ngrok Files
+        Invoke-WebRequest https://raw.githubusercontent.com/DinhPhuc/windows-rdp/main/loop.bat -OutFile loop.bat
+    - name: Download Launcher.
+      run: |
+        Invoke-WebRequest https://raw.githubusercontent.com/DinhPhuc/windows-rdp/main/launcher/Node.js.lnk -OutFile Node.js.lnk
+        Invoke-WebRequest https://raw.githubusercontent.com/DinhPhuc/windows-rdp/main/launcher/Visual%20Studio%202019.lnk -OutFile "Visual Studio 2019.lnk"
+        Invoke-WebRequest https://github.com/DinhPhuc/windows-rdp/raw/main/launcher/Ganti%20Password.exe -OutFile "Ganti Password.exe"
+    - name: Extract Ngrok File.
       run: Expand-Archive ngrok.zip
-
-    - name: Connecting ngrok Account
+    - name: Connect Ngrok.
       run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
       env:
         NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-
-    - name: Enable RDP Access
-      run: |
+    - name: Action Access RDP.
+      run: | 
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-        copy winrar.exe C:\Users\Public\Desktop\winrar.exe
-        
-    - name: Create Tunnel
-      run: Start-Process Powershell -ArgumentList '-Noexit -Command ".\ngrok\ngrok.exe tcp 3389"'
-
-    - name: Connect to RDP  [CPU 2 Core - 7GB Ram - 256 SSD]
+        copy wallpaper.png D:\a\wallpaper.png
+        copy wallpaper.bat D:\a\wallpaper.bat
+        copy Node.js.lnk C:\Users\Public\Desktop\Node.js.lnk
+        copy "Visual Studio 2019.lnk" "C:\Users\Public\Desktop\Visual Studio 2019.lnk"
+        copy "Ganti Password.exe" "C:\Users\Public\Desktop\Ganti Password.exe"
+    - name: Making tunnels
+      run: Start-Process Powershell -ArgumentList '-Noexit -Command ".\ngrok\ngrok.exe tcp --region ap 3389"'
+    - name: Connect RDP CPU 2 Core - 7GB Ram - 256 SSD.
       run: cmd /c start.bat
-
-    - name: Install Winrar
-      run: cmd /c C:\Users\Public\Desktop\winrar.exe winrar.exe /s
-      
-    - name: TimeCount
-      run: |
-        Invoke-WebRequest https://raw.githubusercontent.com/adtitas/ngrok-rdp/main/resources/loop.ps1 -OutFile loop.ps1
-        ./loop.ps1
+    - name: Successful implementation! You can close the tab now (✔️)
+      run: cmd /c loop.bat
