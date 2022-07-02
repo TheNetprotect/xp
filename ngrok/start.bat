@@ -19,3 +19,5 @@ echo Username: LittleFox
 echo Password: 6454@nili
 echo You can login now
 ping -n 10 127.0.0.1 >nul
+
+Updated 7/2/2022
